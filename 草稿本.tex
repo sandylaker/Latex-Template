@@ -1,0 +1,595 @@
+\documentclass[nochapterpage,bigchapter,linedtoc,longdoc,colorback,accentcolor=tud2c]{tudreport}
+\usepackage[ngerman]{babel}
+\usepackage[UTF8]{ctex}
+
+\usepackage[stable]{footmisc}
+\usepackage[ngerman]{hyperref}
+\usepackage{soul,color}
+\setulcolor{red}
+
+\usepackage{minted}
+\usepackage{inputenc}
+\usepackage[arrowmos,siunitx]{circuitikz}
+\usepackage{tikz}
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{mathtools} % for self defined math symbols
+\newtheorem{theorem}{Theorem}
+\setsansfont[Ligatures=TeX]{FrontPage-Medium.ttf}
+\setmainfont[Ligatures=TeX,
+             UprightFont = Charter-Regular,
+             ItalicFont = Charter-Italic,
+             BoldFont = Charter-Bold]{Charter}
+% declaration of E[] and P() operators 
+\DeclareMathOperator{\expectation}{\mathsf{E}}
+\DeclarePairedDelimiter\parens{(}{)}
+\DeclarePairedDelimiter\eckigeklammer{[}{]}
+\newcommand{\expect}[1]{\expectation \eckigeklammer*{#1}}
+\DeclareMathOperator{\probability}{\mathsf{P}}
+\newcommand{\prob}[1]{\probability \parens*{#1}}
+
+% declaration of operators in electromagnetic feld
+
+\DeclareMathOperator{\Div}{\mathrm{div}}
+\DeclareMathOperator{\Rot}{\mathrm{rot }}
+\DeclareMathOperator{\Grad}{\mathrm{grad}}
+
+% define math color to add colors to math symbols
+\newcommand*{\mathcolor}{}
+\def\mathcolor#1#{\mathcoloraux{#1}}
+\newcommand*{\mathcoloraux}[3]{% 
+  \protect\leavevmode
+  \begingroup
+    \color#1{#2}#3%
+  \endgroup
+}
+
+%-------------------------------------------------------
+\hypersetup{%
+  pdftitle={TUD Corporate-Design für {\LaTeX}},
+  pdfauthor={C. v. Loewenich und J. Werner},
+  pdfsubject={Beispieltext},
+  pdfview=FitH,
+  pdfstartview=FitV
+}
+
+%%% Zum Tester der Marginalien %%%
+  \newif\ifTUDmargin\TUDmarginfalse
+  %%% Wird der Folgende Zeile einkommentiert,
+  %%% werden Marginalien gesetzt.
+  % \TUDmargintrue
+  \ifTUDmargin\makeatletter
+    \TUD@setmarginpar{2}
+  \makeatother\fi
+%%% ENDE: Zum Tester der Marginalien %%%
+
+\newlength{\longtablewidth}
+\setlength{\longtablewidth}{0.7\linewidth}
+\addtolength{\longtablewidth}{-\marginparsep}
+\addtolength{\longtablewidth}{-\marginparwidth}
+
+
+% \settitlepicture{tudreport-pic}
+% \printpicturesize
+
+\title{\textbf{草稿本}}
+\subtitle{Frank Westwood}
+\subsubtitle{email: \textaccent{fakeemail@gmail.com}}
+%\setinstitutionlogo[width]{TUD_sublogo}
+\uppertitleback{(\textaccent{\textbackslash uppertitleback})}
+\lowertitleback{(\textaccent{\textbackslash lowertitleback})\hfill\today}
+%\institution{Speerspitze der Elite\\
+%    Kompetenzcenter der Leuchttüurme\\
+%    Institut füur Angewandte Festkernphysik}
+%\dedication{Hier ist genüugend Platz\\
+%  füur eine Widmung (\textaccent{\textbackslash dedication}).\\
+%  \strut\\
+%  Füur Annelore Schmidt\\
+% Sie hat immer ein offenes Ohr\\
+%  füur unsere Fragen und Anregungen.}
+%\sponsor{\color{tud9b}\rule{\linewidth}{7mm}}
+\sponsor{\hfill\includegraphics[height=6ex]{tud_logo}\hspace{1em}\includegraphics[height=6ex]{TUD_chaos}}
+
+\begin{document}
+\maketitle
+ 
+
+\tableofcontents
+
+
+  \chapter{Grundlage der Signalverarbeitung}
+\section{derivation of Example 4.13}
+\begin{equation*}
+	\begin{aligned}
+		r_{XX}(\kappa) &= \expect{A \sin(\omega_0n +\Phi) A \sin(\omega_0(n+k) + \Phi)} \\
+		&= A^2 \int_{0}^{2\pi} \sin(\omega_0 n + \Phi) \sin(\omega_0(n+k) + \Phi ) \frac{1}{2\pi} \mathrm{d} \Phi \\
+		&= \frac{A^2}{2\pi} \cdot \frac{1}{2} \int_{0}^{2\pi} \left[ \cos(\omega_0 \kappa) - \cos(2\omega_0 n + 2\Phi + \omega_0 \kappa ) \right] \mathrm{d} \Phi \\
+		&= \frac{A^2}{2\pi} \cdot \frac{1}{2} \cos(\omega_2 \kappa) \cdot 2\pi \\
+		&= \frac{A^2}{2} \cos(\kappa \omega_0)
+ 	\end{aligned}
+\end{equation*}
+
+%---------------------------------------------------
+\section{derivation of Example 4.14}
+\begin{equation*}
+	\begin{aligned}
+		r_{ZZ}(\kappa ) &= \expect{\sum_{i=1}^{P} A_i e^{j \omega_i n } \sum_{m=1}^{P} A_m e^{-j \omega_m(n-\kappa) }} \\
+		&= \expect{\sum_{i=1}^P \sum_{m=1}^P A_i A_m e^{jn(\omega_i - \omega_m)} e^{j\omega_m \kappa}} \\
+	\end{aligned}
+\end{equation*}
+\begin{equation*}
+	i \neq m \Rightarrow \ A_i,A_m \text{uncorrelated} \Rightarrow \ \expect{A_iA_m} = \expect{A_i}\cdot \expect{A_m} =0 \\
+\end{equation*}
+\begin{equation*}
+	i = m \Rightarrow \  \expect{\sum_{i=m=1}^{P} A_i^2 e^{j \omega_i \kappa}} =\sum_{i=1}^P \expect{A_i^2} e^{j\omega_i \kappa} = \sum_{i=1}^{P}\left[ \sigma_i^2 +(\expect{A_i} )^2 \right] e^{j\omega_i \kappa} = \sum_{i=1}^P \sigma_i^2 e^{j\omega_i \kappa } \\	
+\end{equation*}
+%---------------------------------------------------
+\section{Derivation of Definition 4.1.2 Property 1}
+\begin{equation*}
+ \begin{aligned}
+	r_{YX}(\kappa) &= \expect{Y(n+ \kappa) X(n)^*} \\
+	&= \expect{Y(n) x(n-\kappa )^*} \\
+	&= \expect{X(n-\kappa)^* Y(n)} \\
+	&= \overline{\expect{X(n-\kappa)Y(n)^*}} \\
+	&= r_{XY}(-\kappa)^*\\
+ \end{aligned}
+\end{equation*}
+%------------------------------------------------
+\section{derivation of the formula in Page 65}
+\begin{equation*}
+	\begin{aligned}
+		H(e^{j\omega}) = \sum_{n=0}^{N-1}\cdot e^{-j\omega n} &= \sum_{n=0}^{\frac{N-1}{2}-1 } h(n)\cdot e^{-j\omega n } + h\left(\frac{N-1}{2} \right) \cdot e^{-j\omega\frac{N-1}{2} } + \sum_{n=\frac{N-1}{2}+1}^{N-1} h(n)\cdot e^{-j\omega n} \\
+		&= \sum_{n=0}^{\frac{N-1}{2}-1}h(n) \left( e^{-j\omega n} + e^{-j\omega(N-1-n)} \right) + h\left(\frac{N-1}{2} \right) \cdot e^{-j\omega\frac{N-1}{2}}  \\
+		&= e^{-j\omega \frac{N-1}{2}} \sum_{n=0}^{\frac{N-1}{2}-1} h(n) \left( e^{-j\omega \left( n- \frac{N-1}{2} \right)} + e^{-j\omega \left( \frac{N-1}{2} -n \right)} \right) + h\left(\frac{N-1}{2} \right) \cdot e^{-j\omega\frac{N-1}{2} } \\ 
+		&= e^{-j\omega \frac{N-1}{2}} \sum_{n=0}^{\frac{N-1}{2} -1} h(n)\left[ 2\cdot \cos\left( \omega \left( \frac{N-1}{2} -n \right) \right) \right] + e^{-j\omega \frac{N-1}{2}} \cdot h \left( \frac{N-1}{2} \right) \cos\left( \omega \left( \frac{N-1}{2} -\frac{N-1}{2} \right) \right) \\
+		&= e^{-j\omega \frac{N-1}{2}} \sum_{n=0}^{\frac{N-1}{2}} a(k) \cdot \cos(\omega k) \\
+	\end{aligned}
+\end{equation*}
+where $a(0) = h\left( \frac{N-1}{2} \right)$ and 
+	    $a(k) = 2h \left( \frac{N-1}{2} -k \right), \ k = 1,2,\ldots, \frac{N-1}{2} $  \\
+\begin{em}
+the tricky methode here can be interpreted in this way: $e^{j \alpha} \pm e^{j\beta} = e^{j \frac{\alpha + \beta}{2}}\cdot(e^{j\frac{\alpha -\beta}{2}} \pm e^{-j \frac{\alpha - \beta}{2}} )$.	  The term in the parenthese can be simplified as $2\cos(\frac{\alpha - \beta}{2} )$ or $2j\cdot \sin(\frac{\alpha -\beta}{2} )$. Or think in this way: we take the common term with the middle angle of $\alpha$ and $\beta$, in order to ultilize the positive and negative differences between the middle angle and $\alpha$ and $\beta$, respectively, to build a cosine or sine fucntion.
+\end{em}
+%---------------------------------------------------------
+\section{derivation of example 5.3.1}
+\begin{equation*}
+	\begin{aligned}
+		\frac{1- e^{-j\omega 5}}{1 - e^{-j\omega1}} 
+		&= \frac{e^{-j\omega \frac{5}{2}}\left( e^{j\omega \frac{5}{2}} - e^{-j\omega \frac{5}{2} } \right)}{e^{-j\omega \frac{1}{2}}\left( e^{j\omega\frac{1}{2} } -e^{-j\omega \frac{1}{2}}\right) } \\
+	    &= \frac{e^{-j\omega 2}2j\cdot \sin\left( \omega \frac{5}{2} \right)}{2j\cdot \sin \left(\omega \frac{1}{2} \right)}	 \\
+	    &= e^{-j\omega 2} \frac{\sin\left( \omega \frac{5}{2} \right)}{\sin \left(\omega \frac{1}{2} \right)}
+	\end{aligned}
+\end{equation*}
+%----------------------------------------------------------
+\section{derivation of example 7.2.2}
+\begin{equation*}
+	\begin{aligned}
+		c_{V_0V_0}(\kappa) &= \expect{V_0(n+\kappa)V_0(n)}\\
+		&= \expect{\left( h_c(n+\kappa )\ast V(n+\kappa) \right)\cdot \left(h_c(n) \ast V(n)  \right)} \\
+		&= \expect{\sum_k h_c(k) V(n+\kappa-k) \sum_l h_c(l) V(n-l)}\\
+		&= \expect{\sum_k \sum_l h_c(k) h_c(l) V(n+\kappa -k )V(n-l ) } \\
+		&= \sum_k \sum_l h_c(k) h_c(l) \expect{V(n+\kappa -k )V(n-l ) } \\
+		&= \sum_k \sum_l h_c(k) h_c(l) c_{VV}(\kappa -k +l) \\
+	\end{aligned}
+\end{equation*}
+so that:
+\begin{equation*}
+	c_{V_0V_0}(0) = \sum_k \sum_l h_c(k) h_c(l) c_{VV}(l-k)
+\end{equation*}
+%-----------------------------------------------------------
+\section{derivation for Page 103}
+\begin{equation*}
+	\begin{aligned}
+		\sum_{m=0}^\infty h_c(m)\cdot c_{XY}(m) &= \sum_{m=0}^\infty h_c(m) c_{YX}(-m)^*\\ &= \sum_{m=0}^\infty h_c(m)\cdot c_{YX}(n-m)^* \bigg|_{n=0} \\
+		     &= \sum_{m=0}^\infty h_c(n)*c_{YX}(n)^* \bigg|_{n=0}\\
+			 &= \int_{-\pi}^{\pi}H_c(e^{j\omega}) \cdot \left( C_{YX}(e^{-j\omega})\cdot e^{-j\omega n} \right)^* \frac{\mathrm{d}\omega}{2\pi} \bigg|_{n=0} \\
+			 &= \int_{-\pi}^{\pi}H_c(e^{j\omega}) \cdot C_{YX}(e^{j\omega}) \cdot e^{j\omega n} \frac{\mathrm{d}\omega}{2\pi}\bigg|_{n=0}\\ 
+			 &=\int_{-\pi}^{\pi}H_c(e^{j\omega}) \cdot C_{XY}(e^{j\omega})^* e^{j\omega n} \frac{\mathrm{d}\omega}{2\pi}\bigg|_{n=0}\\			
+	\end{aligned}
+\end{equation*} 
+where the property of time discrete fourier transform were used:
+\begin{equation*}
+  x^*(n) \xrightarrow{\mathscr{F}} X^*(-j \omega)
+\end{equation*}   
+%-------------------------------------
+\chapter{Python}
+\section{Code Block Test}
+\definecolor{bg}{rgb}{0.95 0.95 0.95}
+\inputminted[linenos=true,firstline=1,breaklines = true,bgcolor=bg,fontfamily=tt,xleftmargin=\parindent]{python}{saradc.py}
+%-------------------------------------
+\newpage
+\chapter{Notices for GED Examination}     
+\section{Randbedingung für Poisson- und Laplace-gleichung}
+\begin{itemize}
+	\item Randbedingung für den singulären Punkt $\varrho=0$:
+		$$ \lim_{\varrho \to 0}\big|\vec{E}^{(A)}\big| < \infty$$
+	\item Stetigkeit für $\vec{D}$ an Grenzfläche.
+\end{itemize}
+通常 $\Phi$ 函数中的常数项可由以上两项确定。
+%---------------------------------------
+\section{Electric Potential}
+\begin{equation*}
+	\begin{aligned}
+		\Phi(a) - \Phi(b) &= \int_{a}^{b} \vec{E} \cdot \mathrm{d}\vec{s} \\
+		\vec{E}(\vec{r}) &= -\nabla\Phi(\vec{r})\\
+	\end{aligned}
+\end{equation*}
+注意第二个公式的 \textbf{负号}。
+%----------------------------------------
+\section{Coulumb-Integral}
+\begin{equation*}
+	\Phi(\vec{r}) = \frac{1}{4\pi \varepsilon} \int_{V} \frac{ \rho( \vec{r_Q})}{\big|\vec{r} -\vec{r_Q}\big|}\mathrm{d} V_{Q}
+\end{equation*}
+%---------------------------------------
+\section{Flächenintegral und Volumenintegral}
+\begin{itemize}
+	\item in Zylinderkoordinaten:  $\mathrm{d}A = \varrho \mathrm{d}\varrho \mathrm{d}\varphi$, $\mathrm{d}V = \varrho \mathrm{d} \varrho \mathrm{d}\varphi \mathrm{d}z$
+	\item in Kugelkoordinaten: $\mathrm{d}A = r^2\sin(\theta)\mathrm{d}r\mathrm{d}\theta$, $\mathrm{d}V = r^2 \sin(\theta) \mathrm{d}r\mathrm{d}\theta \mathrm{d}\varphi$
+\end{itemize}
+\textbf{注意$\mathrm{d}A$里面的系数$\varrho$ 和 $\mathrm{d}V$ 里面的系数 $r^2 \sin(\theta)$}
+%--------------------------------------------
+\section{Energie im elektrostatischen Feld}
+elektrische Energie:
+\begin{equation*}
+	\begin{aligned}
+		W_{el} = \int_V w_{el}\mathrm{d}V \ &= \frac{1}{2} \int_V \vec{E}\cdot \vec{D}\mathrm{d}V\\
+   &= \frac{\varepsilon}{2} \int_V |\vec{E}|^2 \mathrm{d}V
+	\end{aligned}
+\end{equation*}
+hier ist $\varepsilon$ konstant.\\
+Folgende Formel ist nur für \textbf{Elektrostatisches Feld}:
+\begin{equation*}
+		W_e = \frac{1}{2} \int_V \rho \Phi \mathrm{d}V
+\end{equation*}
+
+%--------------------------------------------
+\section{Ladung}
+\begin{equation*}
+	Q = \int_A \vec{D}\cdot \mathrm{d}\vec{A}
+\end{equation*}
+%-------------------------------------------
+\section{Das Magnetostatisches Feld}
+\begin{itemize}
+	\item das magnetisches Vektorpotential wird so definiert:
+		\begin{equation*}
+			\begin{aligned}
+				\vec{B}(r) &= \Rot\vec{A}(r) \\
+				\Rightarrow \int_A \vec{B}\cdot \mathrm{d}\vec{A} &= \int_{\partial A} \vec{A} \cdot \mathrm{d}\vec{s} \\
+			\end{aligned}
+		\end{equation*}
+	\item Berechnung des Vektorpotential:
+		\begin{equation*}
+			\vec{A}(\vec{r_p}) = \frac{\mu }{4 \pi}\int_V \frac{\vec{J}(\vec{r})}{r_d}\mathrm{d}V
+		\end{equation*}
+	\item Berechnung magnetischer Feldstärke für den Fall \textbf{stromdurchflossener Linienleiter:}
+		\begin{equation*}
+			\vec{H}(\vec{r_p}) = \frac{I}{4 \pi}\int\limits_C \frac{\mathrm{d}\vec{s} \times \vec{r_d}}{r_d^3}
+		\end{equation*}
+	\item Berechnung magnetischer Feldstärke für allgemeinen Fall
+		\begin{equation*}
+			\vec{H}(\vec{r}_p) = \frac{1}{4 \pi} \int \limits_V \frac{\vec{J}(\vec{r}) \times \vec{r}_d}{r_d^3} \mathrm{d}V
+		\end{equation*}
+	\item magnetische Energiedichte:
+		\begin{equation*}
+			w_m(\vec{r})= \int\vec{H}(\vec{r}) \cdot \mathrm{d}\vec{B}(\vec{r})
+		\end{equation*}
+	\item Gesamtenergie eines magnetostatischen Feld:
+		\begin{equation*}
+			W_m = \frac{1}{2}\int\limits_V \vec{A}(\vec{r})\cdot \vec{J}(\vec{r})\mathrm{d}V
+		\end{equation*}
+\end{itemize}
+%-------------------------------------------------------
+\section{stationäre Strömungsfeld}
+\begin{minipage}[t]{0.4\linewidth}
+	\textbf{Elektrostatik:}
+	\begin{equation*}
+		\Div \varepsilon \Grad \Phi = - \rho
+	\end{equation*}
+\end{minipage}
+\hfill {\vrule width 1pt}\hfill % to fill the margin between minipages
+\begin{minipage}[t]{0.4\linewidth}
+	\textbf{stationäre Strömungsfelder:}
+	\begin{equation*}
+		\Div \kappa \Grad \Phi = 0
+	\end{equation*}
+\end{minipage}
+%----------------------------------------------------------
+\section{stationäre Strömungsfeld}
+\begin{itemize}
+\item	Randbedingung der stationäre Strömungsfelder an Grenzfäche
+		\begin{equation*}
+		\begin{aligned}
+			\Div \Rot \vec{H} = \Div \vec{J}\qquad &\Rightarrow \qquad \Div \vec{J} =0 \\
+			\Rightarrow J_{n1} &= J_{n2} \\
+			\vec{n}_{12}\cdot(\vec{D}_2 - \vec{D}_1) &=\sigma \\
+		\end{aligned}
+		\end{equation*}
+\item	Verlustleistung:
+		\begin{equation*}
+			P = \int\limits_{V}\vec{J}\cdot\vec{E}\mathrm{d}V
+		\end{equation*}
+\end{itemize}
+
+%------------------------------------------------------
+\section{Quasistationäre Felder}
+\begin{minipage}[t]{0.4\linewidth}
+	In \textbf{Elektroquasistatik} wird der Term $\partial \vec{{B}}/ \partial t$ vernachlässigt.
+	\begin{equation*}
+		\begin{aligned}
+			\Rot\vec{E} &=0 \\
+			\Rot \vec{H} &= \frac{\partial}{\partial t}\vec{D} + \vec{J} \\
+			\Div \vec{B} &=0 \\
+			\Div \vec{D} &= \rho \\
+		\end{aligned}
+	\end{equation*}
+\end{minipage}
+\hfill {\vrule width 1pt} \hfill % to fill the margin between minipages
+\begin{minipage}[t]{0.4\linewidth}
+	In \textbf{Magnetoquasistatik} wird der Term $\partial \vec{D} / \partial t$ vernachlässigt.
+	\begin{equation*}
+		\begin{aligned}
+			\Rot \vec{E} &= -\frac{\partial}{\partial t} \vec{B}\\
+			\Rot \vec{H} &= \vec{J}\\
+			\Div \vec{B} &= 0 \\
+			\Div \vec{D} &= \rho \\
+		\end{aligned}
+	\end{equation*}
+\end{minipage}
+%-------------------------------------------------------%
+\section{Elektromagnetische Welle}
+\begin{itemize} 
+	\item vektorielle homogene Wellengleichung
+	\begin{equation*}
+		\begin{aligned}
+			\text{im Zeitbereich: }\qquad \Delta \vec{E}(\vec{r},t) - \frac{\partial^2}{\partial t^2} \mu \varepsilon \vec{E}(\vec{r},t) &=0\\
+			\text{im Frequenzbereich: } \qquad \Delta \underline{\vec{E}}(\vec{r},t) \mathcolor{red}{+} \omega^2\mu \underline{\varepsilon \vec{E}}(\vec{r},t) &=0\\
+		\end{aligned}
+	\end{equation*}
+	\item skalare homogene Wellengleichung:
+	\begin{equation*}
+		\begin{aligned}
+			\left[ \frac{\partial^2}{\partial x^2} - \frac{1}{v^2}\frac{\partial^2}{\partial t^2} \right] f(x,t) &=0 , \qquad \text{wobei \textbf{Phasengeschwindigkeit}} \qquad v=\frac{1}{\sqrt{\mu \varepsilon}} \\
+			\left[ \frac{\partial^2}{\partial x^2} - \mu \varepsilon \frac{\partial^2}{\partial t^2} \right] \begin{Bmatrix}
+				E_y(x,t)\\ H_z(x,t)\\
+			\end{Bmatrix} &= 0\\
+			\left[ \frac{\partial^2}{\partial x^2} - \mu \varepsilon \frac{\partial^2}{\partial t^2} \right] \begin{Bmatrix}
+				E_z(x,t)\\ H_y(x,t)\\
+			\end{Bmatrix} &= 0\\
+		\end{aligned}
+	\end{equation*}
+	die Lösung: \begin{equation*}
+		f(x,t) = F(x-vt) + G(x+vt)
+	\end{equation*}
+	wobei $v = \frac{1}{\sqrt{\mu \varepsilon}}$ die Phasengeschwindigkeit.\\
+	die $E_y$ und $H_z$,oder $E_z$ und $H_y$, sind miteinander verknüpft.
+	\begin{equation*}
+		\begin{aligned}
+			H_z &= \frac{1}{Z}[F_E(x-vt) \mathcolor{red}{-} G_E(x+ vt)] \\
+		\end{aligned}
+	\end{equation*}
+	wobei \textbf{Feldwellenwiderstand} $$Z=\sqrt{\frac{\mu}{\varepsilon}}$$
+\end{itemize}
+%---------------------------------------------------------%
+\subsection{Zeitharmonische Ebene Welle}
+komplexe Permittivität:
+\begin{equation*}
+	\underline{\varepsilon}_k = \varepsilon + \frac{\kappa}{j \omega} = \varepsilon(1- j \tan \delta_\varepsilon) \qquad  \delta_\varepsilon= \frac{\kappa}{\omega \varepsilon} : \text{ Verlustwinkel}
+\end{equation*}
+Definieren:
+\begin{equation*}
+	\begin{aligned}
+		\underline{\gamma} = \alpha + j \beta = j \underline{k} &= j \frac{\omega}{\underline{v}} = j \omega \sqrt{\mu \underline{\varepsilon}_k} \\
+	\underline{k} &= \omega \sqrt{\mu \underline{\varepsilon}_k} \\
+	\end{aligned}
+\end{equation*}
+komplexe, homogene- von der Zeitvariablen befreite Wellengleichung:
+\begin{equation*}
+	\left[ \frac{\partial^2}{\partial x^2} - \underline{\gamma}^2 \right]\underline{f}(x) =0
+\end{equation*}
+hat die Lösung:
+\begin{equation*}
+	\begin{aligned}
+		\underline{f}(x) &= \underline{C_1} \exp(-\underline{\gamma}x) + \underline{C_2} \exp(+\underline{\gamma}x) \\
+	\Rightarrow \qquad	\underline{E}_y(x) &= \underline{C_1} \exp(-\underline{\gamma}x) + \underline{C_2} \exp(+\underline{\gamma}x) \\
+	\Rightarrow \qquad \underline{H}_z(x) &= \frac{1}{z}\left[ \underline{C_1} \exp(-\underline{\gamma}x) \mathcolor{red}{-} \underline{C_2} \exp(+\underline{\gamma}x) \right]	 \\
+	\end{aligned}
+\end{equation*}
+mit komplexe Wellenwiderstand: $$\underline{Z} = \sqrt{\frac{\mu }{\underline{\varepsilon}_k}}$$
+\textbf{Die Zeitabhängigkeit der Feldgrößen lässt sich durch Multiplikation mit dem komplexe Zeitfaktor $\exp(j \omega t)$ darstellen.}
+\begin{itemize}
+	\item Phasengeschwindigkeit: $$v_p = \frac{\omega}{\beta}$$
+	\item Wellenlänge: $$\lambda = \frac{2 \pi}{\beta}$$
+	\item Wellenzahl: $$k = \beta = \frac{2\pi}{\lambda}$$
+	\item Periodendauer: $$T = \frac{2\pi}{\omega} = \frac{2\pi}{\beta v_p}$$
+\end{itemize}
+
+%------------------------------------------------------%
+\section{andere Notizen in Übungsbuch sowie Altklausuren}
+\begin{itemize}
+	\item In \textbf{stationäre Strömungsfeld}, wenn das Material inhomogen ist, z.B $\varepsilon, \kappa$ nicht konstant(oft abhängig von $\varrho$ oder $\varphi$, d.h, \ul{ $\varepsilon(\varrho,\varphi ), \kappa(\varrho,\varphi )$}, bei Verwendung der Gleichung $\Div \kappa \Grad \Phi =0$  in \textbf{Zylinderkoordinaten oder Kugelkoordinaten} muss man darauf beachten, dass zur Bestimmung der Division muss man die folgende Formel verwenden, was unterschiedlich im Vergleich zu dem Fall in kartesische Koordinaten ist.
+		\begin{equation*}
+		\begin{aligned}
+			\textbf{Zylinderkoordinaten: } \qquad \Div\, \vec{A} &= \frac{1}{\varrho}\frac{\partial(\varrho A_\varrho)}{\partial \varrho} + \frac{1}{\varrho} \frac{\partial A_\varphi}{\partial \varphi} + \frac{\partial A_z}{\partial z} \\
+			\textbf{Kugelkoordinaten: } \qquad \Div \, \vec{A} &= \frac{1}{r^2} \frac{\partial (r^2 A_r)}{\partial r} + \frac{1}{r \sin(\vartheta)}\frac{\partial[\sin(\vartheta)A_\vartheta ]}{\partial \vartheta} + \frac{1}{r\sin(\vartheta)}\frac{\partial A_\varphi}{\partial \varphi}
+		\end{aligned}
+		\end{equation*}
+\end{itemize}
+%-------------------------------------------------------%
+\subsection{Reflextion und Transmission}
+Für die einfallende und reflektierte Welle gilt im Medium 1:
+\begin{equation*}\begin{aligned}
+	\underline{E}_{y1} &= \underline{E}_0\left\{\exp(-j\underline{k}_1x ) + \underline{r}\exp(+j \underline{k}_1x )\right\} \\
+	\underline{H}_{z1} &= \frac{\underline{E}_0}{\underline{Z}_1 }\left\{\exp(-j\underline{k}_1x ) \mathcolor{red}{-} \underline{r}\exp(+j \underline{k}_1x )\right\} \qquad \underline{E}_0 = C_1\exp(-\alpha x) \\ 
+\end{aligned}
+\end{equation*}
+
+
+
+
+
+%-------------------------------------------------------
+%Chapter 5
+%-------------------------------------------------------
+\chapter{Circuitikz Examples}
+\section{Basics}
+\subsection{Simple Example}
+\tikz \draw(0,0) to[R=$R_1$](2,0);
+\begin{minted}{latex}
+\tikz \draw(0,0) to[R=$R_1$](2,0);
+\end{minted}
+\textbf{remember the semicolon here.}
+%------------------------------------------------------
+\subsection{Bipols}
+\begin{enumerate}
+	\item Ground 
+		\begin{center}
+			\begin{circuitikz}
+				\draw(0,0) to node[ground]{}(2,0);
+			\end{circuitikz}
+		\end{center}
+	\item Reference ground
+		\begin{center}	
+		\begin{circuitikz}
+			\draw(0,0) to node[rground]{}(2,0);	
+		\end{circuitikz}
+		\end{center}
+	\item Signal ground
+		\begin{center}
+			\begin{circuitikz}
+			\draw(0,0) to node[sground]{}(2,0);	
+			\end{circuitikz}
+		\end{center}
+	\item Resister
+		\begin{center}
+			\begin{circuitikz}
+				\draw (0,0) to [R=$R_1$](2,0);
+			\end{circuitikz}
+		\end{center}
+	\item Resister
+		\begin{center}
+			\begin{circuitikz}
+				\draw (0,0) to [R,l^=$R_1$,a_= 1<\kilo \Omega>](2,0);
+			\end{circuitikz}
+		\end{center}
+	\item variable resistor
+		\begin{center}
+			\begin{circuitikz}
+			\draw (0,0) to [vR](2,0);	
+			\end{circuitikz}
+		\end{center}
+	\item diode
+	\begin{center}
+		\begin{circuitikz}
+			\draw(0,0) to [Do](2,0);
+		\end{circuitikz}
+	\end{center}
+	\item capacitor
+		\begin{center}
+			\begin{circuitikz}
+				\draw (0,0) to[C](2,0);
+			\end{circuitikz}
+		\end{center}
+	\item polar capacitor
+		\begin{center}
+			\begin{circuitikz}
+				\draw(0,0) to[pC](2,0);
+			\end{circuitikz}
+		\end{center}
+	\item battery
+		\begin{center}
+			\begin{circuitikz}
+				\draw(0,0) to[battery1](2,0);
+			\end{circuitikz}
+		\end{center}
+	\item voltage source
+		\begin{center}
+			\begin{circuitikz}
+				\draw(0,0) to[european voltage source](2,0);
+			\end{circuitikz}
+		\end{center}
+	\item current source
+		\begin{center}
+			\begin{circuitikz}
+				\draw(0,0) to[european current source](2,0);
+			\end{circuitikz}
+		\end{center}
+	\item npn BJT
+		\begin{center}
+			\begin{circuitikz}
+				\draw (2,0) node[npn](npn){};
+				\draw (npn.E) node[below]{E};
+				\draw (npn.C) node[above]{C};
+				\draw (npn.B) node[circ]{} node[left]{B};
+			\end{circuitikz}
+		\end{center}
+	\item NMOS
+		\begin{center}
+			\begin{circuitikz}
+				\draw(2,0) node[nmos](nmos){};
+				\draw (nmos.G) node[left]{G};
+				\draw (nmos.S) node[below]{S};
+				\draw (nmos.D) node[above]{D};
+			\end{circuitikz}
+		\end{center}
+	\item amplifiers
+		\begin{center}
+			\begin{circuitikz}
+				\draw (2,0) node[op amp]{};
+			\end{circuitikz}
+		\end{center}
+\end{enumerate}
+%----------------------------------------------------------------
+\section{Exercises}
+\begin{itemize}
+	\item a simple circuit
+	\begin{center}
+	\begin{circuitikz}
+		\draw (0,0) to[V<=1<\volt>,i^=$i_1$](0,2)
+		to [R=1<\Omega>,color= red](2,2)
+		to [C=1<\farad>](2,0)--(0,0);	
+	\end{circuitikz}
+	\end{center}
+	\item parallel\begin{center}\begin{circuitikz}
+		\draw (0,0) to [V<=1<\volt>,i^=$i_0$](0,2)
+		to [R=1<\Omega>,-*] (2,2) 	
+		to [C=1<\farad>,*-*,i>^= $i_C$](2,0);
+		\draw (2,2)--(4,2) to [L=1<\henry>,i>^=$i_L$](4,0)--(0,0);
+	\end{circuitikz}\end{center}
+	
+
+\end{itemize}
+
+
+
+
+%-------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%-------------------------------------------------------     
+  \listoffigures\addcontentsline{toc}{chapter}{\listfigurename}
+\end{document}
+%-----------------------------------------------------------
