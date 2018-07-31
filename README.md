@@ -7,3 +7,7 @@ a latex template based on TU Design package
 ```latex
 \newcommand{\py}[1]{\mintinline{python}{#1}}
 ```
+### define a new command for derivative operator
+```latex
+\newcommand{\deriv}[1]{\mathrm{d}{#1}}
+```
