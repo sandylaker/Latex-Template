@@ -14,5 +14,5 @@ a latex template based on TU Design package
 ### global settings for minted environment 
 wrap the codes in a frame so that the codes won't overflow into the left/right/bottom margin.
 ```latex
-setminted[python3]{linenos=true,breaklines=true,bgcolor=bg, xleftmargin=\parindent,frame=single, framesep=2mm}
+\setminted[python3]{linenos=true,breaklines=true,bgcolor=bg, xleftmargin=\parindent,frame=single, framesep=2mm}
 ```
